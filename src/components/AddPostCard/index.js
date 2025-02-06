@@ -120,7 +120,7 @@ export default function AddPostCard(props) {
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 value={interest}
-                disabled={interests.length === 0}
+                disabled={interests && interests.length === 0}
                 label={
                   !interests || interests.length === 0
                     ? "No interest categories have been created yet :("
