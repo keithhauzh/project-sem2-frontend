@@ -7,12 +7,35 @@ import { Container, TextField, Button, Link } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 
-// import { useState } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { doLogin } from "../../utils/api_auth";
+import { useCookies } from "react-cookie";
 
 export default function LoginPage() {
+  const navigate = useNavigate();
+
+  const [cookie, setCookie] = useCookies(["currentUser"]);
+
   // states for input fields
-  //   const [email, setEmail] = useState("");
-  //   const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
+    if (!email || !password) {
+      toast.error("Please fill out all the required fields >:(");
+    } else {
+      const userData = await doLogin(email, password);
+      if (userData) {
+        toast.success("You have successfully logged in. Have fun!");
+        setCookie("currentUser", userData, { maxAge: 60 * 60 * 24 * 30 });
+        // console.log(cookie);
+        navigate("/");
+      }
+    }
+  };
 
   const backgroundColor = blue[100];
   return (
@@ -48,20 +71,20 @@ export default function LoginPage() {
                 <TextField
                   required
                   fullWidth
-                  //   value={email}
-                  //   onChange={(event) => {
-                  //     setEmail(event.target.value);
-                  //   }}
+                  value={email}
+                  onChange={(event) => {
+                    setEmail(event.target.value);
+                  }}
                   label="Email Address"
                 />
               </Grid>
               <Grid item xs={12} sx={{ display: "flex", width: "100%" }}>
                 <TextField
                   fullWidth
-                  //   value={password}
-                  //   onChange={(event) => {
-                  //     setPassword(event.target.value);
-                  //   }}
+                  value={password}
+                  onChange={(event) => {
+                    setPassword(event.target.value);
+                  }}
                   label="Password"
                   type="password"
                 />
@@ -77,7 +100,7 @@ export default function LoginPage() {
                 color: teal[900],
                 backgroundColor: teal[100],
               }}
-              //   onClick={handleFormSubmit}
+              onClick={handleFormSubmit}
             >
               Login
             </Button>
@@ -91,7 +114,7 @@ export default function LoginPage() {
             }}
           >
             <ArrowDownwardIcon />
-            <>Or Login here</>
+            <>Or Signup here</>
             <ArrowDownwardIcon />
           </Box>
           <Link href="/signup" variant="body2">

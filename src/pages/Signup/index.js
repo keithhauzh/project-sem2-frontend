@@ -7,26 +7,42 @@ import Header from "../../components/Header";
 import SidebarButton from "../../components/SidebarButton";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 
-import { Link /*useNavigate*/ } from "react-router-dom";
-
-//   // react imports
-//   import React, { useState } from "react";
-
-//   // sonner imports
-//   import { toast } from "sonner";
-
-//   // api imports
-//   import { doSignup } from "../../utils/api_auth";
-
-//   // component improts
-//   import Header from "../../components/Header";
-
-//   // import useCookies
-//   import { useCookies } from "react-cookie";
+import { Link, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { toast } from "sonner";
+import { doSignup } from "../../utils/api_auth";
+import { useCookies } from "react-cookie";
 
 export default function SignupPage() {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
+  const [cookie, setCookie] = useCookies(["currentUser"]);
   const backgroundColor = blue[100];
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
+    if (!name || !email || !password || !confirmPassword) {
+      toast.error("Please fill out all the required fields >:(");
+    } else if (password !== confirmPassword) {
+      toast.error(
+        "Please make sure both password fields are filled in the same :("
+      );
+    } else {
+      const userData = await doSignup(name, email, password);
+      if (userData) {
+        toast.success(
+          "You have successfully made a new account. We have also logged you in automatically. Have fun!"
+        );
+        setCookie("currentUser", userData, { maxAge: 60 * 60 * 24 * 30 });
+        // console.log(cookie);
+        navigate("/");
+      }
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -62,10 +78,10 @@ export default function SignupPage() {
                 <TextField
                   fullWidth
                   label="Name"
-                  //   value={name}
-                  //   onChange={(event) => {
-                  //     setName(event.target.value);
-                  //   }}
+                  value={name}
+                  onChange={(event) => {
+                    setName(event.target.value);
+                  }}
                 />
               </Grid>
               <Grid
@@ -76,10 +92,10 @@ export default function SignupPage() {
                 <TextField
                   required
                   fullWidth
-                  //   value={email}
-                  //   onChange={(event) => {
-                  //     setEmail(event.target.value);
-                  //   }}
+                  value={email}
+                  onChange={(event) => {
+                    setEmail(event.target.value);
+                  }}
                   label="Email Address"
                 />
               </Grid>
@@ -91,10 +107,10 @@ export default function SignupPage() {
                 <TextField
                   required
                   fullWidth
-                  //   value={password}
-                  //   onChange={(event) => {
-                  //     setPassword(event.target.value);
-                  //   }}
+                  value={password}
+                  onChange={(event) => {
+                    setPassword(event.target.value);
+                  }}
                   label="Password"
                   type="password"
                 />
@@ -107,10 +123,10 @@ export default function SignupPage() {
                 <TextField
                   required
                   fullWidth
-                  //   value={confirmPassword}
-                  //   onChange={(event) => {
-                  //     setConfirmPassword(event.target.value);
-                  //   }}
+                  value={confirmPassword}
+                  onChange={(event) => {
+                    setConfirmPassword(event.target.value);
+                  }}
                   label="Confirm Password"
                   type="password"
                 />
@@ -125,8 +141,7 @@ export default function SignupPage() {
                 backgroundColor: indigo[300],
                 color: lightBlue[100],
               }}
-
-              //   onClick={handleFormSubmit}
+              onClick={handleFormSubmit}
             >
               Signup
             </Button>
