@@ -21,6 +21,7 @@ import Man2Icon from "@mui/icons-material/Man2";
 import Woman2Icon from "@mui/icons-material/Woman2";
 import AssistantIcon from "@mui/icons-material/Assistant";
 import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
+import Filter9PlusIcon from "@mui/icons-material/Filter9Plus";
 
 export default function Sidebar(props) {
   const navigate = useNavigate();
@@ -56,6 +57,19 @@ export default function Sidebar(props) {
               <HomeIcon />
             </ListItemIcon>
             <ListItemText primary="Home" />
+          </ListItemButton>
+        </ListItem>
+
+        <ListItem>
+          <ListItemButton
+            onClick={() => {
+              navigate("/image-board");
+            }}
+          >
+            <ListItemIcon>
+              <Filter9PlusIcon />
+            </ListItemIcon>
+            <ListItemText primary="Image Board" />
           </ListItemButton>
         </ListItem>
 
@@ -126,7 +140,7 @@ export default function Sidebar(props) {
                     <ListItemIcon>
                       <AssistantIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Subscribe to BuzzBoard :)" />  
+                    <ListItemText primary="Subscribe to BuzzBoard :)" />
                   </ListItemButton>
                 </ListItem>
               </>

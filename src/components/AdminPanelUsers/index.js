@@ -21,24 +21,19 @@ export default function AdminPanelUsers() {
     });
   }, []);
 
-  const banUser = async (_id) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this post?"
-    );
+  const banUser = (id, user) => {
+    const confirmed = window.confirm(`Are you sure you want to ban ${user}?`);
     if (confirmed) {
-      // console.log(_id);
-      const deleted = await banUsers(_id, token);
-      // console.log(deleted);
-      // console.log(_id);
-      // console.log(token);
-      if (deleted) {
-        getUsers().then((data) => {
-          setUsers(data);
-        });
-        toast.success("User has been banned successfully");
-      } else {
-        toast.error("Please try again.");
-      }
+      banUsers(id, token).then((data) => {
+        if (data) {
+          getUsers().then((userData) => {
+            setUsers(userData);
+          });
+          toast.success("User has been banned successfully");
+        } else {
+          toast.error("Please try again.");
+        }
+      });
     }
   };
 
@@ -50,7 +45,7 @@ export default function AdminPanelUsers() {
             const { _id, name, email, role, premium_id } = user;
             return (
               <>
-                {currentUser._id !== _id ? (
+                {role !== "admin" ? (
                   <>
                     <Grid
                       key={_id}
@@ -118,7 +113,7 @@ export default function AdminPanelUsers() {
                             variant="contained"
                             color="error"
                             onClick={() => {
-                              banUser(_id);
+                              banUser(_id, name);
                             }}
                           >
                             Ban >:(

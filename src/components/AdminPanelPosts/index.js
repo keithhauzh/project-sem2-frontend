@@ -16,6 +16,14 @@ export default function AdminPanelPosts() {
       setPosts(data);
     });
   }, []);
+
+  const refreshPage = () => {
+    getPosts().then((data) => {
+      // console.log(data);
+      setPosts(data);
+    });
+  };
+
   return (
     <Box sx={{ width: "100%" }}>
       <Box sx={{ padding: "25px", display: "flex", flexDirection: "column" }}>
@@ -23,7 +31,7 @@ export default function AdminPanelPosts() {
           posts.map((post) => {
             return (
               <>
-                <AdminPostCard post={post} />
+                <AdminPostCard post={post} refreshPage={refreshPage}/>
               </>
             );
           })

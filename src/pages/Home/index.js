@@ -2,7 +2,6 @@ import SidebarButton from "../../components/SidebarButton";
 import AddPostCard from "../../components/AddPostCard";
 import PostCard from "../../components/PostCard";
 import Header from "../../components/Header";
-import { getPosts } from "../../utils/api_posts";
 
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -10,7 +9,18 @@ import { useCookies } from "react-cookie";
 
 import { ArrowRight, ArrowLeft } from "@mui/icons-material";
 import { blue } from "@mui/material/colors";
-import { Box, Container, Paper, Button, Select, MenuItem } from "@mui/material";
+import {
+  Box,
+  Container,
+  Paper,
+  Button,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
+
+import { getPosts } from "../../utils/api_posts";
 import { isUserLoggedin } from "../../utils/api_auth";
 import { getInterests } from "../../utils/api_interests";
 
@@ -28,8 +38,8 @@ export default function Home() {
   const [filterInterest, setFilterInterest] = useState("");
 
   useEffect(() => {
+    // console.log(filterInterest);
     getPosts(filterInterest, page).then((data) => {
-      // console.log(data);
       setPosts(data);
     });
   }, [filterInterest, page]);
@@ -43,7 +53,7 @@ export default function Home() {
   const refreshAlong = () => {
     getPosts(interest, page).then((data) => {
       setPosts(data);
-      setInterest("");
+      // setInterest("");
       navigate("/");
     });
   };
@@ -65,20 +75,21 @@ export default function Home() {
         {loggedUser ? <AddPostCard refreshAlong={refreshAlong} /> : null}
 
         <Paper elevation={5} sx={{ marginTop: "50px", padding: "25px" }}>
-          <Select
-            label="Interest"
-            required
-            fullWidth
-            value={filterInterest}
-            onChange={(event) => {
-              // console.log(filterInterest);
-              setFilterInterest(event.target.value);
-            }}
-          >
-            {interests.map((interest) => {
-              return <MenuItem value={interest._id}>{interest.name}</MenuItem>;
-            })}
-          </Select>
+          <FormControl fullWidth>
+            <InputLabel>Choose an Interest to filter posts by</InputLabel>
+            <Select
+              labelId="interest-label"
+              value={filterInterest}
+              onChange={(event) => setFilterInterest(event.target.value)}
+            >
+              <MenuItem value="all">All</MenuItem>
+              {interests.map((interest) => (
+                <MenuItem key={interest._id} value={interest._id}>
+                  {interest.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
 
           {posts && posts.length > 0 ? (
             posts.map((post) => {

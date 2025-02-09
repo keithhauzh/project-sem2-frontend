@@ -7,12 +7,34 @@ import {
   Box,
   Button,
 } from "@mui/material";
-import { useEffect, useState } from "react";
 
-export default function AdminPostCard({ post }) {
+import { toast } from "sonner";
+import { useCookies } from "react-cookie";
+
+import { deletePost } from "../../utils/api_admin";
+import { getUserToken } from "../../utils/api_auth";
+
+export default function AdminPostCard({ post, refreshPage }) {
+  const [cookie] = useCookies(["currentUser"]);
+  const token = getUserToken(cookie);
+
   const postUserColor = indigo[200];
+  const handleDeletePost = (id) => {
+    const confirmed = window.confirm(`Are you sure want to delete this post?`);
+    if (confirmed) {
+      deletePost(id, token).then((data) => {
+        if (!data) {
+          toast.error("Please try again");
+        } else {
+          refreshPage();
+          toast.success(`Post by has been deleted successfully`);
+        }
+      });
+    }
 
-  const { user, title, content, interest } = post;
+    refreshPage();
+  };
+  const { _id, user, title, content, interest } = post;
 
   return (
     <Card
@@ -37,14 +59,27 @@ export default function AdminPostCard({ post }) {
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <Box color={postUserColor} sx={{ display: "flex", margin: "5px" }}>
               <Typography sx={{ marginRight: "5px" }}>Posted by</Typography>
-              <Link
-                href="/profile"
-                sx={{ marginRight: "5px" }}
-                color={postUserColor}
-              >
-                {user.name}
-              </Link>
-              <Typography>who is interested in "{interest.name}"</Typography>
+              {user ? (
+                <>
+                  <Link
+                    href="/profile"
+                    sx={{ marginRight: "5px" }}
+                    color={postUserColor}
+                  >
+                    {user.name}
+                  </Link>
+                </>
+              ) : (
+                <Typography>Deleted User</Typography>
+              )}
+
+              {interest && interest.name ? (
+                <>
+                  <Typography>
+                    who is interested in "{interest.name}"
+                  </Typography>
+                </>
+              ) : null}
             </Box>
           </Box>
         </Box>
@@ -59,7 +94,13 @@ export default function AdminPostCard({ post }) {
         }}
       >
         <>
-          <Button color="error" variant="contained">
+          <Button
+            color="error"
+            variant="contained"
+            onClick={() => {
+              handleDeletePost(_id);
+            }}
+          >
             Delete Post
           </Button>
         </>

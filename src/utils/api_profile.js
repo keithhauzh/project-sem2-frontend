@@ -25,11 +25,11 @@ export const getSelfProfile = async (token) => {
   }
 };
 
-export const editProfile = async (name,  title, color, token) => {
+export const editProfile = async (name, bio, title, color, token) => {
   try {
     const response = await axios.put(
       API_URL + "/profile/edit",
-      { name,  title, color },
+      { name, bio, title, color },
       { headers: { Authorization: "Bearer " + token } }
     );
     return response.data;

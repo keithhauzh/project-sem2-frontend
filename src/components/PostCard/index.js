@@ -55,6 +55,7 @@ export default function PostCard({ post, refreshAlong }) {
   const [bookmarked, setBookmarked] = useState(false);
 
   useEffect(() => {
+    console.log(user);
     if (currentUser && likes && likes.length > 0) {
       const likedOrNot = checkPostLiked(currentUser, likes);
       setLiked(likedOrNot);
@@ -153,28 +154,52 @@ export default function PostCard({ post, refreshAlong }) {
             <Typography color={postUserColor} sx={{ marginRight: "5px" }}>
               Posted by
             </Typography>
-            <Link
-              href="/profile"
-              sx={{
-                marginRight: "5px",
-                color:
-                  user && user.premium_color === "pink"
-                    ? pinkTitle
-                    : user && user.premium_color === "gold"
-                    ? goldTitle
-                    : user && user.premium_color === "red"
-                    ? redTitle
-                    : "inherit",
-                fontWeight: "bold",
-              }}
-              component={RouterDom}
-              to={`/profile/` + user._id}
-            >
-              {user.name} {user.specialTitle ? user.specialTitle : null}
-            </Link>
-            <Typography color={postUserColor}>
-              who is interested in "{interest.name}"
-            </Typography>
+            {user ? (
+              <>
+                <Link
+                  href="/profile"
+                  sx={{
+                    marginRight: "5px",
+                    color:
+                      user && user.premium_color === "pink"
+                        ? pinkTitle
+                        : user && user.premium_color === "gold"
+                        ? goldTitle
+                        : user && user.premium_color === "red"
+                        ? redTitle
+                        : "inherit",
+                    fontWeight: "bold",
+                  }}
+                  component={RouterDom}
+                  to={`/profile/` + user._id}
+                >
+                  {user.name} {user.specialTitle ? user.specialTitle : null}
+                </Link>
+              </>
+            ) : (
+              <Typography
+                color={postUserColor}
+                sx={{ marginLeft: "2px", marginRight: "5px" }}
+              >
+                Deleted User
+              </Typography>
+            )}
+
+            {interest && interest.name ? (
+              <>
+                {user ? (
+                  <>
+                    <Typography color={postUserColor}>
+                      who is interested in "{interest.name}"
+                    </Typography>
+                  </>
+                ) : (
+                  <Typography color={postUserColor}>
+                    who was interested in "{interest.name}"
+                  </Typography>
+                )}
+              </>
+            ) : null}
           </Box>
         </Box>
       </Box>
@@ -216,7 +241,7 @@ export default function PostCard({ post, refreshAlong }) {
             to={`/comments/` + _id}
             color={commentColor}
           >
-            View {!comments.length > 0 ? comments.length : 0} comments
+            View {comments.length > 0 ? comments.length : 0} comments
           </Link>
         </Typography>
 
@@ -229,17 +254,21 @@ export default function PostCard({ post, refreshAlong }) {
             marginTop: "10px",
           }}
         >
-          {user._id === currentUser && (
-            <Button onClick={handleDelete} color="error">
-              <DeleteIcon />
-            </Button>
-          )}
-          {loggedInUser &&
-          loggedInUser.premium_id &&
-          user._id === currentUser ? (
-            <Button component={RouterDom} to={`/edit/` + _id}>
-              <CreateIcon />
-            </Button>
+          {user ? (
+            <>
+              {user._id === currentUser && (
+                <Button onClick={handleDelete} color="error">
+                  <DeleteIcon />
+                </Button>
+              )}
+              {loggedInUser &&
+              loggedInUser.premium_id &&
+              user._id === currentUser ? (
+                <Button component={RouterDom} to={`/edit/` + _id}>
+                  <CreateIcon />
+                </Button>
+              ) : null}
+            </>
           ) : null}
         </Box>
       </Box>

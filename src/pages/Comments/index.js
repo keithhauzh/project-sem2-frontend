@@ -9,8 +9,6 @@ import {
   TextField,
   Backdrop,
   CircularProgress,
-  Select,
-  MenuItem,
   Link,
   Paper,
 } from "@mui/material";
@@ -21,7 +19,7 @@ import { toast } from "sonner";
 import { useCookies } from "react-cookie";
 
 import { getPost } from "../../utils/api_posts";
-import { getCurrentUser, getUserToken } from "../../utils/api_auth";
+import { getUserToken } from "../../utils/api_auth";
 import { createComment } from "../../utils/api_comments";
 import SidebarButton from "../../components/SidebarButton";
 
@@ -60,7 +58,7 @@ export default function CommentsPage() {
         setContent(postData.content);
         setInterest(postData.interest);
         setAllComments(postData.comments);
-        console.log(allComments);
+        // console.log(allComments);
         // console.log(postData);
         setLoading(false);
       }
@@ -75,10 +73,10 @@ export default function CommentsPage() {
       } else {
         getPost(id).then((postData) => {
           if (!postData) {
-            // navigate("/");
+            navigate("/");
             toast.error("Post could not be found :(");
           } else {
-            console.log(postData);
+            // console.log(postData);
             setUser(postData.user);
             setTitle(postData.title);
             setContent(postData.content);
@@ -93,10 +91,6 @@ export default function CommentsPage() {
     });
   };
 
-  // const comments = [
-  //   { _id: 123, user: 123, content: 123 },
-  //   { _id: 456, user: 456, content: 456 },
-  // ];
   return (
     <>
       <Box
@@ -108,7 +102,7 @@ export default function CommentsPage() {
       >
         <SidebarButton />
         <Typography variant="h4" sx={{ padding: "25px", fontWeight: "bold" }}>
-          Comments on {user.name}'s post
+          Comments on {user ? user.name : "Deleted User"}'s post
         </Typography>
         <Container sx={{ paddingTop: "100px" }}>
           <Card
@@ -139,28 +133,34 @@ export default function CommentsPage() {
                   <Typography color={postUserColor} sx={{ marginRight: "5px" }}>
                     Posted by
                   </Typography>
-                  <Link
-                    href="/profile"
-                    sx={{
-                      marginRight: "5px",
-                      color:
-                        user && user.premium_color === "pink"
-                          ? pinkTitle
-                          : user && user.premium_color === "gold"
-                          ? goldTitle
-                          : user && user.premium_color === "red"
-                          ? redTitle
-                          : "inherit",
-                      fontWeight: "bold",
-                    }}
-                    component={RouterDom}
-                    to={`/profile/` + user._id}
-                  >
-                    {user.name} {user.specialTitle ? user.specialTitle : null}
-                  </Link>
-                  <Typography color={postUserColor}>
-                    who is interested in "{interest.name}"
-                  </Typography>
+                  {user ? (
+                    <Link
+                      href="/profile"
+                      sx={{
+                        marginRight: "5px",
+                        color:
+                          user && user.premium_color === "pink"
+                            ? pinkTitle
+                            : user && user.premium_color === "gold"
+                            ? goldTitle
+                            : user && user.premium_color === "red"
+                            ? redTitle
+                            : "inherit",
+                        fontWeight: "bold",
+                      }}
+                      component={RouterDom}
+                      to={`/profile/` + user._id}
+                    >
+                      {user.name} {user.specialTitle ? user.specialTitle : null}
+                    </Link>
+                  ) : (
+                    <Typography color={postUserColor}>Deleted User</Typography>
+                  )}
+                  {interest ? (
+                    <Typography color={postUserColor}>
+                      who is interested in "{interest.name}"
+                    </Typography>
+                  ) : null}
                 </Box>
               </Box>
             </Box>

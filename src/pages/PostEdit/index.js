@@ -77,7 +77,7 @@ export default function PostEdit() {
   const handleFormSubmit = async (event) => {
     event.preventDefault();
     // check for error
-    if (!title || !content || !interest) {
+    if (!title || !content) {
       toast.error("Please fill out all the required fields! >:(");
     } else {
       const updatedPost = await editPost(id, title, content, interest, token);

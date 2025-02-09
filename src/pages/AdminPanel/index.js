@@ -7,14 +7,28 @@ import SidebarButton from "../../components/SidebarButton";
 import AdminPanelPosts from "../../components/AdminPanelPosts";
 import AdminPanelUsers from "../../components/AdminPanelUsers";
 import AdminPanelInterests from "../../components/AdminPanelInterests";
-import AdminPanelSubscriptions from "../../components/AdminPanelSubscriptions";
 
-import { useState } from "react";
+import { useCookies } from "react-cookie";
+import { toast } from "sonner";
+import { useState, useEffect } from "react";
+
+import { getCurrentUser } from "../../utils/api_auth";
+import { useNavigate } from "react-router-dom";
 
 export default function AdminPanel() {
-  const [panel, setPanel] = useState("users");
+  const navigate = useNavigate();
+  const [cookie] = useCookies(["currentUser"]);
+  const currentUser = getCurrentUser(cookie);
 
+  const [panel, setPanel] = useState("users");
   const backgroundColor = blue[100];
+
+  useEffect(() => {
+    if (currentUser.role !== "admin") {
+      toast.error("You are not an admin!");
+      navigate("/");
+    }
+  }, []);
 
   return (
     <>
@@ -69,21 +83,11 @@ export default function AdminPanel() {
               >
                 Interests
               </Button>
-              <Button
-                variant={panel === "subscriptions" ? "outlined" : "text"}
-                color=""
-                onClick={() => {
-                  setPanel("subscriptions");
-                }}
-              >
-                Subscriptions
-              </Button>
             </Box>
             <Box sx={{ display: "flex", justifyContent: "space-around" }}>
               {panel === "users" ? <AdminPanelUsers /> : null}
               {panel === "posts" ? <AdminPanelPosts /> : null}
               {panel === "interests" ? <AdminPanelInterests /> : null}
-              {panel === "subscriptions" ? <AdminPanelSubscriptions /> : null}
             </Box>
           </Paper>
         </Container>

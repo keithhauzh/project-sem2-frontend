@@ -14,21 +14,51 @@ export const getUsers = async () => {
 
 export const banUsers = async (id, token) => {
   try {
-    const response = await axios.delete(API_URL + "/admin/" + id, {
+    const response = await axios.delete(API_URL + "/admin/user/" + id, {
       headers: { Authorization: "Bearer " + token },
     });
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    toast.error(error.response.data.error);
+  }
+};
+
+export const deletePost = async (id, token) => {
+  try {
+    const response = await axios.delete(API_URL + "/admin/post/" + id, {
+      headers: { Authorization: "Bearer " + token },
+    });
+    // console.log(response.data)
+    return response.data;
+  } catch (error) {
+    // console.log(error)
+    toast.error(error.response.data.error);
+  }
+};
+
+export const createInterest = async (interestName, token) => {
+  try {
+    const response = await axios.post(
+      API_URL + "/admin/interest",
+      { interestName },
+      { headers: { Authorization: "Bearer " + token } }
+    );
     return response.data;
   } catch (error) {
     toast.error(error.response.data.error);
   }
 };
 
-export const deletePost = async (id, token, user) => {
+export const deleteInterest = async (id, token) => {
   try {
-    const response = await axios.delete(
-      API_URL + "/admin" + id,
-      { user },
-      { headers: { Authorization: "Bearer " + token } }
-    );
-  } catch (error) {}
+    // console.log(id);
+    const response = await axios.delete(API_URL + "/admin/interest/" + id, {
+      headers: { Authorization: "Bearer " + token },
+    });
+    return response.data;
+  } catch (error) {
+    // console.log(error.response.data.error);
+    toast.error(error.response.data.error);
+  }
 };

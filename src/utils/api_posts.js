@@ -91,7 +91,7 @@ export const likePost = async (id, user, token) => {
 export const checkPostLiked = (user, likes) => {
   // console.log(likes);
   // console.log(likes);
-  console.log(user);
+  // console.log(user);
   if (likes.find((userId) => userId._id === user)) {
     return true;
   } else {

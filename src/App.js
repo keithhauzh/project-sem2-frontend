@@ -14,6 +14,7 @@ import SelfProfilePage from "./pages/SelfProfile";
 import AdminPanel from "./pages/AdminPanel";
 import PostEdit from "./pages/PostEdit";
 import VerifyPayment from "./pages/VerifyPayment";
+import ImageBoardPage from "./pages/ImageBoard";
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
             <Route path="/admin" element={<AdminPanel />}></Route>
             <Route path="/edit/:id" element={<PostEdit />}></Route>
             <Route path="/verify-payment" element={<VerifyPayment />}></Route>
+            <Route path="/image-board" element={<ImageBoardPage />}></Route>
           </Routes>
         </BrowserRouter>
         <Toaster richColors position="top-right" />

@@ -33,6 +33,7 @@ export default function SelfProfilePage() {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [bio, setBio] = useState("");
   const [title, setTitle] = useState("");
   const [color, setColor] = useState("none");
 
@@ -46,6 +47,7 @@ export default function SelfProfilePage() {
       if (data) {
         setName(data.name);
         setEmail(data.email);
+        setBio(data.bio ? data.bio : null);
         setTitle(data.specialTitle || "NO TITLE");
         setColor(data.premium_color || "none");
       } else {
@@ -62,6 +64,7 @@ export default function SelfProfilePage() {
       const updatedTitle = title === "NO TITLE" ? "" : title;
       const updatedProfile = await editProfile(
         name,
+        bio,
         updatedTitle,
         color,
         token
@@ -111,6 +114,14 @@ export default function SelfProfilePage() {
             value={name}
             onChange={(event) => {
               setName(event.target.value);
+            }}
+          />
+          <TextField
+            label="Bio"
+            fullWidth
+            value={bio}
+            onChange={(event) => {
+              setBio(event.target.value);
             }}
           />
           <TextField fullWidth value={email} disabled />

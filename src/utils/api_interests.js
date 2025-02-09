@@ -32,14 +32,3 @@ export const addInterest = async (name, token) => {
     toast.error(error.response.data.error);
   }
 };
-
-export const deleteInterest = async (id, token) => {
-  try {
-    const response = await axios.delete(API_URL + "/interests" + id, {
-      headers: { Authorization: "Bearer " + token },
-    });
-    return response.data;
-  } catch (error) {
-    toast.error(error.response.data.error);
-  }
-};

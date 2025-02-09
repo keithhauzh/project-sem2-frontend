@@ -13,10 +13,11 @@ export default function Header(props) {
           display: "flex",
           justifyContent: "center",
           marginBottom: "10px",
+          fontWeight: "bold",
         }}
         variant="h1"
       >
-        ~ {title} ~
+        {title}
       </Typography>
       <Typography sx={{ display: "flex", justifyContent: "center" }}>
         Current user:{" "}

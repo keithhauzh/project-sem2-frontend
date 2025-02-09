@@ -27,6 +27,7 @@ export default function ProfilePage() {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [bio, setBio] = useState("");
   const [title, setTitle] = useState("");
   const [color, setColor] = useState("none");
 
@@ -35,17 +36,19 @@ export default function ProfilePage() {
   const redTitle = red["A700"];
 
   useEffect(() => {
-    // console.log(id);
+    // console.log(bio);
     getProfile(id).then((data) => {
       console.log(data);
       if (data && data.title) {
         setName(data.name);
         setEmail(data.email);
+        setBio(data.bio ? data.bio : null);
         setTitle(data.title);
         setColor(data.color);
       } else if (data) {
         setName(data.name);
         setEmail(data.email);
+        setBio(data.bio ? data.bio : null);
         setTitle("NO TITLE");
         setColor(data.color);
       } else {
@@ -91,6 +94,15 @@ export default function ProfilePage() {
             value={name}
             onChange={(event) => {
               setName(event.target.value);
+            }}
+          />
+          <TextField
+            disabled
+            label="Bio"
+            fullWidth
+            value={bio ? bio : "No information given"}
+            onChange={(event) => {
+              setBio(event.target.value);
             }}
           />
           <TextField

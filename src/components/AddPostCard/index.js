@@ -34,7 +34,7 @@ export default function AddPostCard(props) {
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-    if (!title || !content || !interest) {
+    if (!title || !content) {
       toast.error("Please fill out all the required fields");
     } else {
       const newPostData = await addPost(user, title, content, interest, token);
